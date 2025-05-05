@@ -89,11 +89,9 @@ Built with modern web technologies and integrated with powerful APIs to deliver 
 
 ## 🚀 Getting Started
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/YOUR_USERNAME/playspot.git
-cd playspot
-```
+# Clone the repository
+git clone https://github.com/lokesh-poreddy/PlaySpot---Playground-Booking.git
+cd PlaySpot---Playground-Booking
 2. Install dependencies:
 ```pnpm install```
 3. Set up environment variables:
@@ -120,3 +118,7 @@ cd playspot
 3. Commit your changes
 4. Push to the branch
 5. Create a new Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
