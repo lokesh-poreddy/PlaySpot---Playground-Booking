@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.pnpm/@prisma+client@*/node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement()) @map("userid")
+  username    String    @unique
+  fullname    String
+  email       String    @unique
+  phone       String
+  password    String
+  bookings    Booking[]
+  reviews     Review[]
+  
+  @@map("users")
+}
+
+model Playground {
+  id             Int       @id @default(autoincrement()) @map("pid")
+  playgroundcode String    @unique
+  playgroundname String
+  location       String
+  hourlyrate     Float
+  category       String
+  slots          Slot[]
+  reviews        Review[]
+  
+  @@map("playgrounds")
+}
+
+model Slot {
+  id         Int       @id @default(autoincrement()) @map("slotid")
+  playground Playground @relation(fields: [pid], references: [id])
+  pid        Int
+  slot_date  DateTime  @db.Date
+  start_time DateTime  @db.Time
+  end_time   DateTime  @db.Time
+  status     String    @default("available")
+  bookings   Booking[]
+  
+  @@map("slots")
+}
+
+model Booking {
+  id             Int      @id @default(autoincrement()) @map("bookingid")
+  user           User     @relation(fields: [userid], references: [id])
+  userid         Int
+  slot           Slot     @relation(fields: [slotid], references: [id])
+  slotid         Int
+  booking_time   DateTime @default(now())
+  duration_hours Int
+  total_amount   Float
+  payments       Payment[]
+  
+  @@map("bookings")
+}
+
+model Payment {
+  id           Int      @id @default(autoincrement()) @map("paymentid")
+  booking      Booking  @relation(fields: [bookingid], references: [id])
+  bookingid    Int
+  payment_date DateTime
+  amount_paid  Float
+  payment_mode String?
+  
+  @@map("payments")
+}
+
+model Review {
+  id          Int        @id @default(autoincrement()) @map("reviewid")
+  user        User       @relation(fields: [userid], references: [id])
+  userid      Int
+  playground  Playground @relation(fields: [pid], references: [id])
+  pid         Int
+  rating      Int
+  comment     String?    @db.Text
+  review_date DateTime   @default(now())
+  
+  @@map("reviews")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement()) @map("adminid")
+  username String @unique
+  password String
+  fullname String
+  
+  @@map("admins")
+}
